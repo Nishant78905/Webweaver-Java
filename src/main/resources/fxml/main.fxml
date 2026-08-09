@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.control.ProgressIndicator?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.cell.PropertyValueFactory?>
+<?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.control.SplitPane?>
+<VBox spacing="20" alignment="TOP_CENTER" style="-fx-background-color: #f8fafc;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.akatsuki.webweaver.controller.MainController">
+    <padding>
+        <Insets top="30" right="40" bottom="30" left="40"/>
+    </padding>
+
+    <VBox alignment="CENTER" spacing="5">
+        <Label text="🕸️ WEBWEAVER DASHBOARD" style="-fx-font-size: 28px; -fx-font-weight: 800; -fx-text-fill: #1e293b; -fx-font-family: 'Segoe UI', sans-serif;"/>
+        <Label text="Heuristic-Guided Web Crawler" style="-fx-font-size: 14px; -fx-text-fill: #64748b; -fx-font-weight: bold;"/>
+    </VBox>
+
+    <VBox spacing="15" style="-fx-background-color: white; -fx-background-radius: 12; -fx-border-radius: 12; -fx-border-color: #e2e8f0; -fx-padding: 25;">
+        <effect>
+            <DropShadow color="#0000001a" radius="10" spread="0.0" width="20" height="20" offsetX="0" offsetY="4"/>
+        </effect>
+
+        <GridPane hgap="15" vgap="15" alignment="CENTER">
+            <Label text="Start URL:" style="-fx-font-weight: bold; -fx-text-fill: #475569;" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+            <TextField fx:id="urlInput" prefWidth="350" promptText="https://en.wikipedia.org/wiki/Music" style="-fx-background-color: #f1f5f9; -fx-border-color: #cbd5e1; -fx-border-radius: 6; -fx-background-radius: 6; -fx-padding: 8;" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+
+            <Label text="Topic:" style="-fx-font-weight: bold; -fx-text-fill: #475569;" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+            <TextField fx:id="topicInput" promptText="rock music" style="-fx-background-color: #f1f5f9; -fx-border-color: #cbd5e1; -fx-border-radius: 6; -fx-background-radius: 6; -fx-padding: 8;" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+        </GridPane>
+
+        <HBox spacing="25" alignment="CENTER" style="-fx-padding: 10 0 0 0;">
+            <VBox alignment="CENTER" spacing="5">
+                <Label text="TOP-K" style="-fx-font-size: 11px; -fx-font-weight: bold; -fx-text-fill: #94a3b8;"/>
+                <TextField fx:id="topKInput" text="5" prefWidth="70" alignment="CENTER" style="-fx-border-color: #cbd5e1; -fx-border-radius: 4;"/>
+            </VBox>
+            <VBox alignment="CENTER" spacing="5">
+                <Label text="DEPTH" style="-fx-font-size: 11px; -fx-font-weight: bold; -fx-text-fill: #94a3b8;"/>
+                <TextField fx:id="depthInput" text="3" prefWidth="70" alignment="CENTER" style="-fx-border-color: #cbd5e1; -fx-border-radius: 4;"/>
+            </VBox>
+            <VBox alignment="CENTER" spacing="5">
+                <Label text="RESULT LIMIT" style="-fx-font-size: 11px; -fx-font-weight: bold; -fx-text-fill: #94a3b8;"/>
+                <TextField fx:id="resultLimitInput" text="15" prefWidth="90" alignment="CENTER" style="-fx-border-color: #cbd5e1; -fx-border-radius: 4;"/>
+            </VBox>
+        </HBox>
+
+        <HBox spacing="15" alignment="CENTER" style="-fx-padding: 15 0 0 0;">
+            <Button fx:id="crawlButton" text="START AI CRAWL" onAction="#onStartCrawlClicked"
+                    style="-fx-background-color: #2563eb; -fx-text-fill: white; -fx-font-weight: 800; -fx-padding: 12 30; -fx-background-radius: 8; -fx-cursor: hand; -fx-font-size: 14px;"/>
+            <ProgressIndicator fx:id="loadingSpinner" visible="false" prefHeight="30" prefWidth="30" style="-fx-accent: #2563eb;"/>
+        </HBox>
+        <Label fx:id="statusLabel" text="System Ready" alignment="CENTER" maxWidth="Infinity" style="-fx-text-fill: #64748b; -fx-font-style: italic;"/>
+    </VBox>
+
+    <VBox spacing="10" VBox.vgrow="ALWAYS" style="-fx-background-color: white; -fx-background-radius: 12; -fx-border-radius: 12; -fx-border-color: #e2e8f0; -fx-padding: 20;">
+        <effect>
+            <DropShadow color="#0000001a" radius="10" spread="0.0" width="20" height="20" offsetX="0" offsetY="4"/>
+        </effect>
+
+        <Label fx:id="totalCrawledLabel" text="Total Pages Crawled: 0" style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #10b981;"/>
+
+        <SplitPane VBox.vgrow="ALWAYS" dividerPositions="0.5" style="-fx-background-color: transparent;">
+
+            <TableView fx:id="resultsTable" prefHeight="300" style="-fx-background-color: transparent; -fx-border-color: #e2e8f0; -fx-border-radius: 6;">
+                <columns>
+                    <TableColumn text="Rank" prefWidth="60" fx:id="rankCol" style="-fx-alignment: CENTER; -fx-font-weight: bold;"/>
+                    <TableColumn text="Page URL" prefWidth="300" fx:id="urlCol" style="-fx-text-fill: #2563eb;">
+                        <cellValueFactory><PropertyValueFactory property="url"/></cellValueFactory>
+                    </TableColumn>
+                    <TableColumn text="Rank Score" prefWidth="100" fx:id="scoreCol" style="-fx-alignment: CENTER-RIGHT; -fx-font-weight: bold;">
+                        <cellValueFactory><PropertyValueFactory property="score"/></cellValueFactory>
+                    </TableColumn>
+                </columns>
+            </TableView>
+
+            <VBox style="-fx-border-color: #e2e8f0; -fx-border-radius: 6;">
+                <javafx.scene.web.WebView fx:id="graphWebView" VBox.vgrow="ALWAYS" prefHeight="300" prefWidth="400"/>
+            </VBox>
+
+        </SplitPane>
+    </VBox>
+</VBox>
